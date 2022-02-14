@@ -9,8 +9,9 @@
    make build
    ```
 
-3. 在该文件夹下执行二进制文件，得到合并后的excel
+3. 在该文件夹下执行对应系统的二进制文件，得到合并后的excel
+   - 例如：
 
    ```shell
-   ./goExcelTools
+   ./GoMergeExcel-mac-M1-arm64-v1.0.0
    ```
