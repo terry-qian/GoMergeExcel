@@ -27,14 +27,13 @@ func main() {
 	newFile = xlsx.NewFile()
 	var newErr error
 	newSheet, newErr = newFile.AddSheet("Sheet1")
+	var fileList []*xlsx.File
 
-	for index, fi := range dir {
-
+	for _, fi := range dir {
 		if !strings.Contains(fi.Name(), ".xlsx") {
 			continue
 		}
 		// fmt.Printf("open success: %s\n", Pthdir+PthSep+fi.Name())
-		// fmt.Printf("index: %d\n", index)
 		if newErr != nil {
 			fmt.Printf("error: %s", newErr.Error())
 		}
@@ -44,13 +43,17 @@ func main() {
 		if err != nil {
 			fmt.Printf("open failed: %s\n", err)
 		}
-		for _, sheet := range xlFile.Sheets {
-			// fmt.Printf("Sheet Name: %s\n", sheet.Name)
+		fileList = append(fileList, xlFile)
+	}
 
+	for i, item := range fileList {
+		for _, sheet := range item.Sheets {
+			// fmt.Printf("Sheet Name: %s\n", sheet.Name)
+			// fmt.Printf("index: %d\n", i)
 			for num, row := range sheet.Rows {
 				// fmt.Printf("num: %d\n", num)
 				// 第二个开始跳过第一行表头，将后面的行写入新的文件
-				if index < 2 {
+				if i < 1 {
 					newRow := newSheet.AddRow()
 					newRow.SetHeightCM(1)
 					for _, cell := range row.Cells {
