@@ -6,11 +6,15 @@ import (
 	"os"
 	"strings"
 
+	"GoMergeExcel/config"
+
 	"github.com/tealeg/xlsx"
 )
 
 // 获取指定目录下的所有文件和目录
 func main() {
+	// 加载配置
+	config.Init("")
 
 	// 设置路径，文件夹放在main的同级目录下
 	PthSep := string(os.PathSeparator)
@@ -53,18 +57,8 @@ func main() {
 			for num, row := range sheet.Rows {
 				// fmt.Printf("num: %d\n", num)
 				// 第二个开始跳过第一行表头，将后面的行写入新的文件
-				if i < 1 {
-					newRow := newSheet.AddRow()
-					newRow.SetHeightCM(1)
-					for _, cell := range row.Cells {
-						text := cell.String()
-						// fmt.Printf("%s\n", text)
-
-						newCell := newRow.AddCell()
-						newCell.Value = text
-					}
-				} else {
-					if num > 0 {
+				if config.GConfig.IfMergeHeader {
+					if i < 1 {
 						newRow := newSheet.AddRow()
 						newRow.SetHeightCM(1)
 						for _, cell := range row.Cells {
@@ -74,6 +68,28 @@ func main() {
 							newCell := newRow.AddCell()
 							newCell.Value = text
 						}
+					} else {
+						if num > 0 {
+							newRow := newSheet.AddRow()
+							newRow.SetHeightCM(1)
+							for _, cell := range row.Cells {
+								text := cell.String()
+								// fmt.Printf("%s\n", text)
+
+								newCell := newRow.AddCell()
+								newCell.Value = text
+							}
+						}
+					}
+				} else {
+					newRow := newSheet.AddRow()
+					newRow.SetHeightCM(1)
+					for _, cell := range row.Cells {
+						text := cell.String()
+						// fmt.Printf("%s\n", text)
+
+						newCell := newRow.AddCell()
+						newCell.Value = text
 					}
 				}
 			}
