@@ -1,4 +1,4 @@
-build: fmt vet lint
+build: fmt vet
 	go build -o bin/GoMergeExcel ./main.go
 
 fmt:

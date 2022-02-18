@@ -16,7 +16,6 @@ func MergeCsv(dir []fs.FileInfo, ifMergeHeaderConfig bool) {
 		if !strings.Contains(fi.Name(), ".csv") {
 			continue
 		}
-		// fmt.Printf("open success: %s\n", Pthdir+PthSep+fi.Name())
 		if newErr != nil {
 			fmt.Printf("error: %s", newErr.Error())
 		}
@@ -29,40 +28,31 @@ func MergeCsv(dir []fs.FileInfo, ifMergeHeaderConfig bool) {
 		fileList = append(fileList, file)
 	}
 
-	// 合并行
+	// 合并后的
 	var rows [][]string
 
 	if ifMergeHeaderConfig {
 		for index, item := range fileList {
+			reader := csv.NewReader(item)
+			// 设置返回记录中每行数据期望的字段数，-1 表示返回所有字段
+			reader.FieldsPerRecord = -1
 			if index < 1 {
-				reader := csv.NewReader(item)
-				// 设置返回记录中每行数据期望的字段数，-1 表示返回所有字段
-				reader.FieldsPerRecord = -1
 				records, _ := reader.ReadAll()
 				rows = append(rows, records...)
 			} else {
-				var records []string
-				reader := csv.NewReader(item)
-				// 设置返回记录中每行数据期望的字段数，-1 表示返回所有字段
-				reader.FieldsPerRecord = -1
-				record, err3 := reader.Read()
-				if err3 != nil {
-					panic(err3)
-				}
-				records = append(records, record...)
-				rows = append(rows, records)
+				records, _ := reader.ReadAll()
+				// 删除第一行表头
+				records = records[1:][:]
+				rows = append(rows, records...)
 			}
 		}
 
 	} else {
 		for _, item := range fileList {
-
 			reader := csv.NewReader(item)
-			// 设置返回记录中每行数据期望的字段数，-1 表示返回所有字段
 			reader.FieldsPerRecord = -1
 			records, _ := reader.ReadAll()
 			rows = append(rows, records...)
-
 		}
 	}
 
