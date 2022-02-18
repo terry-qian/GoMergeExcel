@@ -9,7 +9,8 @@ import (
 
 // GlobalConfig global config
 type GlobalConfig struct {
-	IfMergeHeader bool `yaml:"ifMergeHeader"`
+	IfMergeHeader bool   `yaml:"ifMergeHeader"`
+	FileFormat    string `yaml:"fileFormat"`
 }
 
 // GConfig global configuration
